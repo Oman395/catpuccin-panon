@@ -1,0 +1,19 @@
+{
+    "arguments": [{
+        "name": "bar_spacing",
+        "default": 9,
+        "type": "float",
+        "min":0
+    }, {
+        "name": "bar_width",
+        "default": 30,
+        "type": "float",
+        "min":1
+    }, {
+        "name": "smooth_amount",
+        "default": 0.5,
+        "type": "float",
+        "min": 0
+    }
+    ]
+}
