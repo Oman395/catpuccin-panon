@@ -73,8 +73,9 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
     uv.y = abs(uv.y);
     float floorX = floor(uv.x / total_spacing) * total_spacing;
     float height = mean(floorX, floorX + total_spacing).r;
+
     float radius = bar_width * (iResolution.x / iResolution.y);
-    if(height != 0.0) height = max(height, radius);
+    if(height >= 0.001) height = max(height, radius);
     int colid = int(floor(uv.x / total_spacing)) % colors.length();
     if(uv.y + radius > height && uv.y < height) {
         // We want to be a circle, so we can get our distance from the center of the bar where the circle would be
