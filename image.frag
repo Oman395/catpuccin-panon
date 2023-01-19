@@ -1,4 +1,8 @@
- #version 130
+#version 130
+
+#define bs $bar_spacing
+#define bw $bar_width
+#define blk $background_color
 
 const vec4 purple = vec4(198, 160, 246, 255);
 const vec4 green = vec4(166, 218, 149, 255);
@@ -33,9 +37,6 @@ const vec4 colors[] = vec4[](
     orange
 );
 
-#define bs $bar_spacing
-#define bw $bar_width
-
 // From rbn42-bar
 vec4 mean(float _from,float _to) {
 
@@ -64,10 +65,6 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
     float total_spacing = bar_spacing + bar_width;
     vec2 uv = fragCoord / iResolution.xy;
     float xMod = mod(uv.x, total_spacing);
-    if(xMod < bar_spacing || xMod > bar_width + bar_spacing) {
-        fragColor = vec4(0);
-        return;
-    }
     uv.y -= 0.5;
     uv.y *= 2.0;
     uv.y = abs(uv.y);
@@ -76,6 +73,14 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
 
     float radius = bar_width * (iResolution.x / iResolution.y);
     if(height >= 0.001) height = max(height, radius);
+    else {
+        fragColor = vec4(0);
+        return;
+    }
+    if(xMod < bar_spacing || xMod > bar_width + bar_spacing) {
+        fragColor = blk;
+        return;
+    }
     int colid = int(floor(uv.x / total_spacing)) % colors.length();
     if(uv.y + radius > height && uv.y < height) {
         // We want to be a circle, so we can get our distance from the center of the bar where the circle would be
@@ -89,9 +94,9 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
         float xMod = mod(uv.x, total_spacing);
         xMod -= bar_spacing;
         // Figure out if we are within the range we should be
-        if(xMod < x / 2.0 || xMod > bar_width - x / 2.0) fragColor = vec4(0);
+        if(xMod < x / 2.0 || xMod > bar_width - x / 2.0) fragColor = blk;
         else fragColor = colors[colid] / 255.0;
     }
     else if(height > uv.y) fragColor = colors[colid] / 255.0;
-    else fragColor = vec4(0);
+    else fragColor = blk;
 }
